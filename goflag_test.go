@@ -168,6 +168,40 @@ func TestGoFlagFindAndUp3(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestFlagsFindAndUp(t *testing.T) {
+	// setup
+	var index int = 1024
+	var err error
+	target, _ := NewFlags(100)
+
+	// when
+	for i := 0; i < 99; i++ {
+		target.FindAndUp()
+	}
+	index, err = target.FindAndUp()
+
+	//then
+	assert.Equal(t, 99, index)
+	assert.Nil(t, err)
+}
+
+func TestFlagsFindAndUp2(t *testing.T) {
+	// setup
+	var index int = 1024
+	var err error
+	target, _ := NewFlags(100)
+
+	// when
+	for i := 0; i < 101; i++ {
+		target.FindAndUp()
+	}
+	index, err = target.FindAndUp()
+
+	//then
+	assert.Equal(t, -1, index)
+	assert.Equal(t, ErrNoSpace, err)
+}
+
 //---------------------------------------------- Benchmark -----------------------------------
 
 func BenchmarkGoFlagFindAndUp4096_0(b *testing.B) {

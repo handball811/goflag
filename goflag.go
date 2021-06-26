@@ -28,6 +28,31 @@ func NewFlagWithSize(
 	return flag, nil
 }
 
+func NewFlags(
+	size uint,
+) (*Flag, error) {
+	var i uint
+	var sz uint
+	for i = 0; i < SIZE_BORDER; i++ {
+		sz = 1 << (i*6 + 6)
+		if size <= sz {
+			break
+		}
+	}
+	if i >= SIZE_BORDER {
+		return nil, ErrFlagSize
+	}
+	flag, err := NewFlagWithSize(Size(i))
+	if err != nil {
+		return nil, err
+	}
+	for k := size; k < sz; k++ {
+		flag.Up(int(k))
+	}
+	flag.size = int(size)
+	return flag, nil
+}
+
 func (f *Flag) Check(i int) (bool, error) {
 	if i < 0 || i >= int(f.size) {
 		return false, ErrOutOfBound
